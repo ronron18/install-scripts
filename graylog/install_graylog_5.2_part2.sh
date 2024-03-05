@@ -36,17 +36,14 @@ wget https://packages.graylog2.org/repo/packages/graylog-5.2-repository_latest.d
 dpkg -i graylog-5.2-repository_latest.deb
 apt-get update && apt-get install graylog-server
 
-# Generate secret and password
-< /dev/urandom tr -dc A-Z-a-z-0-9 | head -c${1:-96} >> /tmp/password_secret.tmp
-echo -n "Enter Password: " && head -1 </dev/stdin | tr -d '\n' | sha256sum | cut -d" " -f1 >> /tmp/root_password_sha2.tmp
 
 # Configure graylog server configuration file
---
---
---
---
---
-
+# Set password secret
+sed -i "s/password_secret = /password_secret = $(< /dev/urandom tr -dc A-Z-a-z-0-9 | head -c${1:-96};echo;)" /etc/graylog/server/server.conf
+# root password sha2
+echo "Please enter the Graylog server root password: "
+sed -i "s/root_password_sha2 = /root_password_sha2 = $(echo -n "" && head -1 </dev/stdin | tr -d '\n' | sha256sum | cut -d" " -f1)" /etc/graylog/server/server.conf
+echo "http_bind_address = ${ip_address}:9000" >> /etc/graylog/server/server.conf
 
 # Start graylog server
 systemctl daemon-reload
