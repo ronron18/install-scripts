@@ -7,4 +7,4 @@
     - Use `scp`
 4. Give execute permissions to the files with `chmod u+x [file_name]` .
 5. Execute installation script and follow the instructions.
-8. You're done, what is left is manual configuration to your likings.
+8. You're done, what is left is manual configuration to your likings!
